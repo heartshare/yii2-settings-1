@@ -27,28 +27,28 @@ class Settings extends Component
     }
 
 
-    public function get($key, $category = '')
+    public function get($category, $key)
     {
 
     }
 
 
-    public function set($key, $value, $category= '', $type = null)
+    public function set($category, $key, $value, $type = null)
     {
 
     }
 
-    public function enable($key, $category = '')
+    public function enable($category, $key)
     {
 
     }
 
-    public function disable($key, $category = '')
+    public function disable($category, $key)
     {
 
     }
 
-    public function delete($key, $category = '')
+    public function delete($category, $key)
     {
 
     }
