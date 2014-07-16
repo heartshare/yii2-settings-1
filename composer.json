@@ -1,0 +1,20 @@
+{
+    "name": "dizews/yii2-settings",
+    "keywords": ["yii2", "manager", "settings", "params"],
+    "description": "Settings manager",
+    "license": "BSD-3-Clause",
+    "support": {
+    },
+    "authors": [
+        {
+            "name": "Vladimir Zbrailov",
+            "email": "dizews@gmail.com"
+        }
+    ],
+    "require": {
+        "yiisoft/yii2": "*"
+    },
+    "autoload": {
+        "psr-4": { "dizews\\settings\\": ""}
+    }
+}
