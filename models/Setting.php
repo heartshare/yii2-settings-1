@@ -1,13 +1,11 @@
 <?php
-/**
- * Setting class file.
- * @copyright (c) 2014, Galament
- * @license http://www.opensource.org/licenses/bsd-license.php
- */
 
 namespace dizews\settings\models;
 
 use Yii;
+use yii\behaviors\AttributeBehavior;
+use yii\behaviors\TimestampBehavior;
+use yii\helpers\Json;
 
 /**
  * This is the model class for table "settings".
@@ -31,16 +29,42 @@ class Setting extends \yii\db\ActiveRecord
         return 'settings';
     }
 
+    public function behaviors()
+    {
+        return [
+            'timestamp' => [
+                'class' => TimestampBehavior::className(),
+                'value' => new Expression('NOW()')
+            ],
+            'valueString' => [
+                'class' => AttributeBehavior::className(),
+                'attributes' => [
+                    self::EVENT_AFTER_FIND => 'value',
+                    self::EVENT_BEFORE_INSERT => 'value',
+                    self::EVENT_BEFORE_UPDATE => 'value',
+                ],
+                'value' => function ($event) {
+                        if ($event->name == self::EVENT_AFTER_FIND) {
+                            return Json::encode($this->value);
+                        } else {
+                            return Json::decode($this->value);
+                        }
+                    }
+            ]
+        ];
+    }
+
     /**
      * @inheritdoc
      */
     public function rules()
     {
         return [
+            [['category', 'key'], 'required'],
+            [['type', 'category', 'key'], 'string', 'max' => 255],
             [['created_at', 'updated_at'], 'safe'],
             [['is_active'], 'integer'],
-            [['value'], 'string'],
-            [['type', 'category', 'key'], 'string', 'max' => 255]
+            [['value'], 'string']
         ];
     }
 
