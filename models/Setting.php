@@ -22,6 +22,8 @@ use yii\helpers\Json;
  */
 class Setting extends \yii\db\ActiveRecord
 {
+    protected $value;
+
     /**
      * @inheritdoc
      */
@@ -36,22 +38,6 @@ class Setting extends \yii\db\ActiveRecord
             'timestamp' => [
                 'class' => TimestampBehavior::className(),
                 'value' => new Expression('NOW()')
-            ],
-            'valueString' => [
-                'class' => AttributeBehavior::className(),
-                'attributes' => [
-                    self::EVENT_AFTER_FIND => 'value',
-                    self::EVENT_BEFORE_INSERT => 'value',
-                    self::EVENT_BEFORE_UPDATE => 'value',
-                ],
-                'value' => function ($event) {
-                        //@todo add before validator data if value is object
-                        if ($event->name == self::EVENT_AFTER_FIND) {
-                            return Json::decode($this->value);
-                        } else {
-                            return Json::encode($this->value);
-                        }
-                    }
             ]
         ];
     }
@@ -65,7 +51,8 @@ class Setting extends \yii\db\ActiveRecord
             [['category', 'key'], 'required'],
             [['type', 'category', 'key'], 'string', 'max' => 255],
             [['created_at', 'updated_at', 'value'], 'safe'],
-            [['is_active'], 'integer']
+            [['is_active'], 'integer'],
+            ['value_string', 'string']
         ];
     }
 
@@ -84,6 +71,25 @@ class Setting extends \yii\db\ActiveRecord
             'category' => Yii::t('app', 'category'),
             'key' => Yii::t('app', 'key'),
             'value' => Yii::t('app', 'value'),
+            'value_string' => Yii::t('app', 'value'),
         ];
+    }
+
+    public function setValue($value)
+    {
+        if ($this->type === null) {
+            $type = is_object($value) ? get_class($value) : gettype($value);
+        }
+        $this->value = $value;
+        $this->value_string = Json::encode($this->value);
+    }
+
+    public function getValue()
+    {
+        if ($this->value === null) {
+            $this->value = Json::decode($this->value_string);
+        }
+
+        return $this->value;
     }
 }

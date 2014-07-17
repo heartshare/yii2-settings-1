@@ -38,9 +38,6 @@ class Manager extends Component
             $setting->category = $category;
             $setting->key = $key;
         }
-        if ($type === null) {
-            $type = is_object($value) ? get_class($value) : gettype($value);
-        }
 
         $setting->is_active = 1;
         $setting->type = $type;

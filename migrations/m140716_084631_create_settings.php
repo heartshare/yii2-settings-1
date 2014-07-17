@@ -17,7 +17,7 @@ class m140716_084631_create_settings extends Migration
             'type' => Schema::TYPE_STRING,
             'category' => Schema::TYPE_STRING ." NOT NULL DEFAULT ''",
             'key' => Schema::TYPE_STRING ." NOT NULL DEFAULT ''",
-            'value' => Schema::TYPE_TEXT
+            'value_string' => Schema::TYPE_TEXT
         ];
         $this->createTable($this->settingTable, $columns);
     }
