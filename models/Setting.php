@@ -5,6 +5,7 @@ namespace dizews\settings\models;
 use Yii;
 use yii\behaviors\AttributeBehavior;
 use yii\behaviors\TimestampBehavior;
+use yii\db\Expression;
 use yii\helpers\Json;
 
 /**
@@ -44,10 +45,11 @@ class Setting extends \yii\db\ActiveRecord
                     self::EVENT_BEFORE_UPDATE => 'value',
                 ],
                 'value' => function ($event) {
+                        //@todo add before validator data if value is object
                         if ($event->name == self::EVENT_AFTER_FIND) {
-                            return Json::encode($this->value);
-                        } else {
                             return Json::decode($this->value);
+                        } else {
+                            return Json::encode($this->value);
                         }
                     }
             ]
@@ -62,9 +64,8 @@ class Setting extends \yii\db\ActiveRecord
         return [
             [['category', 'key'], 'required'],
             [['type', 'category', 'key'], 'string', 'max' => 255],
-            [['created_at', 'updated_at'], 'safe'],
-            [['is_active'], 'integer'],
-            [['value'], 'string']
+            [['created_at', 'updated_at', 'value'], 'safe'],
+            [['is_active'], 'integer']
         ];
     }
 
