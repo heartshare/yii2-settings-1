@@ -22,7 +22,7 @@ use yii\helpers\Json;
  */
 class Setting extends \yii\db\ActiveRecord
 {
-    protected $value;
+    private $_value;
 
     /**
      * @inheritdoc
@@ -48,7 +48,7 @@ class Setting extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['category', 'key'], 'required'],
+            [['category', 'key', 'is_active'], 'required'],
             [['type', 'category', 'key'], 'string', 'max' => 255],
             [['created_at', 'updated_at', 'value'], 'safe'],
             [['is_active'], 'integer'],
@@ -80,16 +80,16 @@ class Setting extends \yii\db\ActiveRecord
         if ($this->type === null) {
             $type = is_object($value) ? get_class($value) : gettype($value);
         }
-        $this->value = $value;
-        $this->value_string = Json::encode($this->value);
+        $this->_value = $value;
+        $this->value_string = Json::encode($this->_value);
     }
 
     public function getValue()
     {
-        if ($this->value === null) {
-            $this->value = Json::decode($this->value_string);
+        if ($this->_value === null) {
+            $this->_value = Json::decode($this->value_string);
         }
 
-        return $this->value;
+        return $this->_value;
     }
 }
